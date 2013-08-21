@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 """
  mbed CMSIS-DAP debugger
  Copyright (c) 2006-2013 ARM Limited
