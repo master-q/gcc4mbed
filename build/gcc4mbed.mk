@@ -100,6 +100,7 @@ SRC ?= .
 GCC4MBED_TYPE ?= Release
 MRI_BREAK_ON_INIT ?= 1
 MRI_UART ?= MRI_UART_MBED_USB
+HS_ENABLE ?= 0
 
 
 # Configure MRI variables based on GCC4MBED_TYPE build type variable.
@@ -212,13 +213,13 @@ endif
 ifneq "$(NO_FLOAT_PRINTF)" "1"
 LDFLAGS += -u _printf_float
 endif
-
+LDFLAGS += -Wl,--defsym,jhc_zeroAddress=0
 
 #  Compiler/Assembler/Linker Paths
 GCC = arm-none-eabi-gcc
 GPP = arm-none-eabi-g++
 AS = arm-none-eabi-as
-LD = arm-none-eabi-g++
+LD = arm-none-eabi-gcc
 OBJCOPY = arm-none-eabi-objcopy
 OBJDUMP = arm-none-eabi-objdump
 SIZE = arm-none-eabi-size

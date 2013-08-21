@@ -14,20 +14,31 @@
 */
 /* Blink LED without using the mbed library. */
 #include "LPC17xx.h"
+#include "jhc_rts_header.h"
+#include "c_extern.h"
 
 volatile int g_LoopDummy;
 
+void delay(int times)
+{
+	int i;
+
+	for (i = 0 ; i < times && !g_LoopDummy ; i++) {}
+}
+
 int main() 
 {
-    LPC_GPIO1->FIODIR |= 1 << 18; // P1.18 connected to LED1
-    while(1)
-    {
-        int i;
-        
-        LPC_GPIO1->FIOPIN ^= 1 << 18; // Toggle P1.18
-        for (i = 0 ; i < 5000000 && !g_LoopDummy ; i++)
-        {
-        }
-    }
-    return 0;
+	/* Call Haskell code */
+	int hsargc = 1;
+	char *hsargv = "q";
+	char **hsargvp = &hsargv;
+
+	hs_init(&hsargc, &hsargvp);
+	_amain();
+	hs_exit();
+
+	for (;;) {}
+	/* NOTREACHED */
+
+	return 0;
 }
