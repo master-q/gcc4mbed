@@ -222,6 +222,7 @@ LD = arm-none-eabi-g++
 OBJCOPY = arm-none-eabi-objcopy
 OBJDUMP = arm-none-eabi-objdump
 SIZE = arm-none-eabi-size
+GDB = arm-none-eabi-gdb
 
 # Some tools are different on Windows in comparison to Unix.
 ifeq "$(OS)" "Windows_NT"
@@ -262,11 +263,11 @@ $(PROJECT).bin: $(PROJECT).elf
 $(PROJECT).hex: $(PROJECT).elf
 	@echo Extracting $@
 	$(Q) $(OBJCOPY) -R .stack -O ihex $(PROJECT).elf $(PROJECT).hex
-	
+
 $(OUTDIR)/$(PROJECT).disasm: $(PROJECT).elf
 	@echo Extracting disassembly to $@
 	$(Q) $(OBJDUMP) -d -f -M reg-names-std $(PROJECT).elf >$(OUTDIR)/$(PROJECT).disasm
-	
+
 $(PROJECT).elf: $(LSCRIPT) $(OBJECTS)
 	@echo Linking $@
 	$(Q) $(LD) $(LDFLAGS) $(OBJECTS) $(LIBS) -o $(PROJECT).elf
@@ -325,3 +326,15 @@ $(OUTDIR)/%.o : %.s
 	$(Q) $(AS) $(AS_FLAGS) -o $@ $<
 
 #########################################################################
+
+gdbwrite: all
+	@echo '############################################################'
+	@echo '##### Use me after running "sudo ./gdbserver4mbed.py". #####'
+	@echo '############################################################'
+	$(GDB) -x ../../gdbwrite.boot $(PROJECT).elf
+
+gdbattach: all
+	@echo '############################################################'
+	@echo '##### Use me after running "sudo ./gdbserver4mbed.py". #####'
+	@echo '############################################################'
+	$(GDB) -x ../../gdbattach.boot $(PROJECT).elf
